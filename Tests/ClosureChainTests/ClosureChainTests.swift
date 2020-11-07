@@ -16,11 +16,11 @@ final class ClosureChainTests: XCTestCase {
 
         let tc = ClosureChain()
 
-        tc.try { (chain: ClosureChain.Chain) in
+        tc.try { chain in
             print("Returning '4'")
             chain.succcess(4)
         }
-        tc.try { (x: Int, chain: ClosureChain.Chain) in
+        tc.try { (x: Int, chain) in
             print("Returning 'Foo'")
             chain.succcess("Foo")
         }
