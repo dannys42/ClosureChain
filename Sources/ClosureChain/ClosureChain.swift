@@ -42,9 +42,7 @@ public class ClosureChain {
 
     public func `try`(_ completion:  @escaping (Chain) throws -> Void ) {
         self.numClosures += 1
-        let taskInfo = TaskInfo(block: { [weak self] chain in
-            guard let self = self else { return }
-
+        let taskInfo = TaskInfo(block: { chain in
             do {
                 try completion(chain)
             } catch {
@@ -56,8 +54,7 @@ public class ClosureChain {
 
     public func `try`<RequiredType>(_ completion: @escaping (_ param: RequiredType, Chain) throws ->Void ) {
         self.numClosures += 1
-        let taskInfo = TaskInfo(block: { [weak self] chain in
-            guard let self = self else { return }
+        let taskInfo = TaskInfo(block: { chain in
             guard let nextParam = self.nextParam as? RequiredType else {
                 self.catchHandler(Failures.tryBlockExpectsPriorSuccessWithParameter)
                 return
@@ -93,10 +90,10 @@ public class ClosureChain {
 
     deinit {
 //        #if DEBUG
-        if !self.didStart && self.numClosures > 0 {
-            print("warning: TaskChain was not started before deinit")
-            self.catchHandler(Failures.chainWasNeverStarted)
-        }
+//        if !self.didStart && self.numClosures > 0 {
+//            print("warning: TaskChain was not started before deinit")
+//            self.catchHandler(Failures.chainWasNeverStarted)
+//        }
 //        #endif
     }
 
