@@ -81,13 +81,6 @@ public class ClosureChain {
         self.runBlock()
     }
 
-    public func wait() {
-        while self.tasks.count > 0 {
-            print(" waiting... ")
-            Thread.sleep(forTimeInterval: 1)
-        }
-    }
-
     deinit {
 //        #if DEBUG
 //        if !self.didStart && self.numClosures > 0 {
