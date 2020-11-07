@@ -1,7 +1,7 @@
 import XCTest
-@testable import TaskChain
+@testable import ClosureChain
 
-final class TaskChainTests: XCTestCase {
+final class ClosureChainTests: XCTestCase {
     /// A typical async method that can possibly succeed or fail
     /// - Parameter completion: completion handler executed on success
     func someAsyncThing(delay: TimeInterval, result: Result<Int,Error>, _ completion: @escaping (Result<Int,Error>)->Void) {
@@ -14,32 +14,16 @@ final class TaskChainTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
 
-        let tc = TaskChain()
+        let tc = ClosureChain()
 
-        tc.try { (chain: TaskChain.Chain) in
+        tc.try { (chain: ClosureChain.Chain) in
             print("Returning '4'")
             chain.succcess(4)
         }
-        tc.try { (x: Int, chain: TaskChain.Chain) in
+        tc.try { (x: Int, chain: ClosureChain.Chain) in
             print("Returning 'Foo'")
             chain.succcess("Foo")
         }
-
-//        tc.next { (done : @escaping TaskChain.NextHandler<Int>) in
-//            self.someAsyncThing(delay: 0.1, result: .success(2)) { (result) in
-//                done(.success(3))
-//            }
-//        }
-//
-//        tc.next { (param: Int, done : @escaping TaskChain.NextHandler<String>) in
-//            self.someAsyncThing(delay: 0.1, result: .success(2)) { (result) in
-//                done(.success("good"))
-//            }
-//        }
-//
-//        tc.next { done in
-//            done()
-//        }
 
         tc.catch { (error) in
             print("Error handler: \(error)")
@@ -49,13 +33,6 @@ final class TaskChainTests: XCTestCase {
 
         tc.wait()
     }
-
-//
-//        tc.next() { (b: Bool, completion) in
-//            completion(.success(true))
-//        }
-
-//        XCTAssertEqual(TaskChain().text, "Hello, World!")
 
     static var allTests = [
         ("testExample", testExample),

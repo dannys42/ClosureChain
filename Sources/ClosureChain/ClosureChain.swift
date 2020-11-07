@@ -1,6 +1,6 @@
 import Foundation
 
-public class TaskChain {
+public class ClosureChain {
     public class Chain {
         private var didComplete = false
         fileprivate var didSucceed: (Any?)->Void = { _ in }
