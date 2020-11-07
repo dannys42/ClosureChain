@@ -1,7 +1,7 @@
 import XCTest
 
-import TaskChainTests
+import ClosureChainTests
 
 var tests = [XCTestCaseEntry]()
-tests += TaskChainTests.allTests()
+tests += ClosureChainTests.allTests()
 XCTMain(tests)

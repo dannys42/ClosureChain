@@ -57,25 +57,25 @@ final class ClosureChainTests: XCTestCase {
         var resolvedBlockSequence: [String] = []
 
         g.enter()
-        cc.try { chain in
+        cc.try { link in
             defer { g.leave() }
             resolvedBlockSequence.append("a")
-            chain.succcess(inputValues[0])
+            link.succcess(inputValues[0])
         }
 
         g.enter()
-        cc.try { (x: Int, chain) in
+        cc.try { (x: Int, link) in
             defer { g.leave() }
             resolvedBlockSequence.append("b")
             result.append(x)
-            chain.succcess(inputValues[1])
+            link.succcess(inputValues[1])
         }
 
         g.enter()
-        cc.try { chain in
+        cc.try { link in
             defer { g.leave() }
             resolvedBlockSequence.append("c")
-            chain.succcess()
+            link.succcess()
         }
 
         cc.catch { (error) in

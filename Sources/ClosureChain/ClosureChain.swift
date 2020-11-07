@@ -25,14 +25,14 @@ public class ClosureChain {
 
     public typealias CatchHandler = (Error)->Void
 
-    struct TaskInfo {
+    struct LinkInfo {
         let block: (Chain)->Void
         let paramType: Any.Type
     }
 
     private var didStart = false
-    private var numClosures = 0
-    private var tasks: [TaskInfo] = []
+    private var numLinks = 0
+    private var links: [LinkInfo] = []
     private var nextParam: Any?
     private var catchHandler: CatchHandler = { _ in }
 
@@ -41,20 +41,20 @@ public class ClosureChain {
     }
 
     public func `try`(_ completion:  @escaping (Chain) throws -> Void ) {
-        self.numClosures += 1
-        let taskInfo = TaskInfo(block: { chain in
+        self.numLinks += 1
+        let linkInfo = LinkInfo(block: { chain in
             do {
                 try completion(chain)
             } catch {
                 self.catchHandler(error)
             }
         }, paramType: Void.self)
-        self.tasks.append( taskInfo )
+        self.links.append( linkInfo )
     }
 
     public func `try`<RequiredType>(_ completion: @escaping (_ param: RequiredType, Chain) throws ->Void ) {
-        self.numClosures += 1
-        let taskInfo = TaskInfo(block: { chain in
+        self.numLinks += 1
+        let linkInfo = LinkInfo(block: { chain in
             guard let nextParam = self.nextParam as? RequiredType else {
                 self.catchHandler(Failures.tryBlockExpectsPriorSuccessWithParameter)
                 return
@@ -65,7 +65,7 @@ public class ClosureChain {
                 self.catchHandler(error)
             }
         }, paramType: RequiredType.self)
-        self.tasks.append( taskInfo )
+        self.links.append( linkInfo )
     }
 
     public func `catch`(_ completion: @escaping CatchHandler) {
@@ -78,40 +78,40 @@ public class ClosureChain {
             return
         }
         self.didStart = true
-        self.runBlock()
+        self.runLink()
     }
 
     deinit {
 //        #if DEBUG
 //        if !self.didStart && self.numClosures > 0 {
-//            print("warning: TaskChain was not started before deinit")
+//            print("warning: ClosureChain was not started before deinit")
 //            self.catchHandler(Failures.chainWasNeverStarted)
 //        }
 //        #endif
     }
 
-    private func popElements() -> TaskInfo? {
-        guard self.tasks.count > 0 else {
+    private func popElements() -> LinkInfo? {
+        guard self.links.count > 0 else {
             return nil
         }
-        let taskInfo = self.tasks.removeFirst()
-        return taskInfo
+        let linkInfo = self.links.removeFirst()
+        return linkInfo
     }
 
-    private func runBlock() {
+    private func runLink() {
         defer { self.nextParam = nil }
-        guard let task = self.popElements() else {
+        guard let link = self.popElements() else {
             return
         }
         if let nextParam = self.nextParam {
-            let expectedType = task.paramType
+            let expectedType = link.paramType
             let actualType = type(of: nextParam)
             guard expectedType == actualType else {
                 self.catchHandler(Failures.parameterTypeMismatch(expectedType, actualType) )
                 return
             }
         } else {
-            guard task.paramType == Void.self else {
+            guard link.paramType == Void.self else {
                 self.catchHandler(Failures.noParameterAvailable)
                 return
             }
@@ -120,12 +120,12 @@ public class ClosureChain {
         let chain = Chain()
         chain.didSucceed = { param in
             self.nextParam = param
-            self.runBlock()
+            self.runLink()
         }
         chain.didThrow = { error in
             self.catchHandler(error)
         }
-        task.block(chain)
+        link.block(chain)
     }
 }
 
