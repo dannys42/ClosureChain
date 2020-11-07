@@ -1,16 +1,27 @@
 import Foundation
 
 public class ClosureChain {
-    public enum Failures: Error {
+    public enum Failures: LocalizedError {
         case cannotSucceedTwicePerTry
         case cannotThrowTwice
         case tryBlockExpectsPriorSuccessWithParameter
         case cannotStartTwice
         case chainWasNeverStarted
-        case parameterTypeMismatch
+        case parameterTypeMismatch(Any.Type,Any.Type)
         case noParameterAvailable
-    }
 
+        public var errorDescription: String? {
+            switch self {
+            case .cannotSucceedTwicePerTry: return "Cannot execute .succeed() more than once per try block"
+            case .cannotThrowTwice: return "Cannot more than once per chain"
+            case .tryBlockExpectsPriorSuccessWithParameter: return "Try block specifies a parameter requirement, but none was given by the previous try block"
+            case .cannotStartTwice: return "Cannot .start() a chain more than once"
+            case .chainWasNeverStarted: return "A chain with a try block was declared but never started."
+            case .parameterTypeMismatch(let expected, let actual): return "Try block specifies a parameter requirement, but the type does not match given by the previous try block  (expected: \(expected)  actual: \(actual))"
+            case .noParameterAvailable: return ".noParameterAvailable"
+            }
+        }
+    }
 
     public typealias CatchHandler = (Error)->Void
 
@@ -20,6 +31,7 @@ public class ClosureChain {
     }
 
     private var didStart = false
+    private var numClosures = 0
     private var tasks: [TaskInfo] = []
     private var nextParam: Any?
     private var catchHandler: CatchHandler = { _ in }
@@ -29,7 +41,10 @@ public class ClosureChain {
     }
 
     public func `try`(_ completion:  @escaping (Chain) throws -> Void ) {
-        let taskInfo = TaskInfo(block: { chain in
+        self.numClosures += 1
+        let taskInfo = TaskInfo(block: { [weak self] chain in
+            guard let self = self else { return }
+
             do {
                 try completion(chain)
             } catch {
@@ -40,7 +55,9 @@ public class ClosureChain {
     }
 
     public func `try`<RequiredType>(_ completion: @escaping (_ param: RequiredType, Chain) throws ->Void ) {
-        let taskInfo = TaskInfo(block: { chain in
+        self.numClosures += 1
+        let taskInfo = TaskInfo(block: { [weak self] chain in
+            guard let self = self else { return }
             guard let nextParam = self.nextParam as? RequiredType else {
                 self.catchHandler(Failures.tryBlockExpectsPriorSuccessWithParameter)
                 return
@@ -76,7 +93,7 @@ public class ClosureChain {
 
     deinit {
 //        #if DEBUG
-        if !self.didStart {
+        if !self.didStart && self.numClosures > 0 {
             print("warning: TaskChain was not started before deinit")
             self.catchHandler(Failures.chainWasNeverStarted)
         }
@@ -97,12 +114,14 @@ public class ClosureChain {
             return
         }
         if let nextParam = self.nextParam {
-            guard type(of: nextParam) == task.paramType else {
-                self.catchHandler(Failures.parameterTypeMismatch)
+            let expectedType = task.paramType
+            let actualType = type(of: nextParam)
+            guard expectedType == actualType else {
+                self.catchHandler(Failures.parameterTypeMismatch(expectedType, actualType) )
                 return
             }
         } else {
-            guard (nextParam == nil && task.paramType == Void.self) else {
+            guard task.paramType == Void.self else {
                 self.catchHandler(Failures.noParameterAvailable)
                 return
             }
@@ -144,6 +163,27 @@ public extension ClosureChain {
             }
             didComplete = true
             didThrow(error)
+        }
+    }
+}
+
+extension ClosureChain.Failures: Equatable {
+    public static func == (lhs: ClosureChain.Failures, rhs: ClosureChain.Failures) -> Bool {
+        switch lhs {
+        case cannotSucceedTwicePerTry: return rhs == .cannotSucceedTwicePerTry
+        case cannotThrowTwice: return rhs == .cannotThrowTwice
+        case tryBlockExpectsPriorSuccessWithParameter: return rhs == .tryBlockExpectsPriorSuccessWithParameter
+        case cannotStartTwice: return rhs == .cannotStartTwice
+        case chainWasNeverStarted: return rhs == .chainWasNeverStarted
+        case parameterTypeMismatch(let lhsExpected, let lhsActual):
+            switch rhs {
+            case .parameterTypeMismatch(let rhsExpected, let rhsActual):
+                return lhsExpected == rhsExpected && lhsActual == rhsActual
+            default:
+                return false
+            }
+        case noParameterAvailable: return rhs == .noParameterAvailable
+
         }
     }
 }
