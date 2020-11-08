@@ -92,20 +92,20 @@ function closureChainExample() {
            getDataAsync() { result: Result<Data,Error> in  // result type is provided solely for context
                switch result {
                    case .failure(let error):
-                       throw error  // C1
+                       throw error              // C1
                    case .success(let data):
-                       link.success(data)  // C2
+                       link.success(data)       // C2
                }
            }
     }
 
-    cc.try { data: Data, link in // C3
+    cc.try { data: Data, link in                // C3
         convertToUIImage(data) { result: Result<UIImage,Error> in // result type is provided solely for context
             switch result {
                 case .failure(let error):
                     throw error
                 case .success(let uiimage):
-                    link.success(uiimage)  // C4
+                    link.success(uiimage)       // C4
             }
         }
     }
@@ -115,15 +115,15 @@ function closureChainExample() {
             if let error = error {
                 throw error
             }
-            link.success()  // C5
+            link.success()                      // C5
         }
     }
 
     cc.catch { error in
         // error handler
     }
-    cc.start() // C6
-}              // C7
+    cc.start()                                  // C6
+}                                               // C7
 ```
 
 * [C1] we can use `throw` directly in a try block
