@@ -26,7 +26,7 @@ public class ClosureChain {
     public typealias CatchHandler = (Error)->Void
 
     struct LinkInfo {
-        let block: (Chain)->Void
+        let block: (Link)->Void
         let paramType: Any.Type
     }
 
@@ -40,7 +40,7 @@ public class ClosureChain {
         nextParam = nil
     }
 
-    public func `try`(_ completion:  @escaping (Chain) throws -> Void ) {
+    public func `try`(_ completion:  @escaping (Link) throws -> Void ) {
         self.numLinks += 1
         let linkInfo = LinkInfo(block: { chain in
             do {
@@ -52,7 +52,7 @@ public class ClosureChain {
         self.links.append( linkInfo )
     }
 
-    public func `try`<RequiredType>(_ completion: @escaping (_ param: RequiredType, Chain) throws ->Void ) {
+    public func `try`<RequiredType>(_ completion: @escaping (_ param: RequiredType, Link) throws ->Void ) {
         self.numLinks += 1
         let linkInfo = LinkInfo(block: { chain in
             guard let nextParam = self.nextParam as? RequiredType else {
@@ -117,7 +117,7 @@ public class ClosureChain {
             }
         }
 
-        let chain = Chain()
+        let chain = Link()
         chain.didSucceed = { param in
             self.nextParam = param
             self.runLink()
@@ -130,7 +130,7 @@ public class ClosureChain {
 }
 
 public extension ClosureChain {
-    class Chain {
+    class Link {
         private var didComplete = false
         fileprivate var didSucceed: (Any?)->Void = { _ in }
         fileprivate var didThrow: (Error)->Void = { _ in }
