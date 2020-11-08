@@ -47,23 +47,23 @@ Closure Chains simplify this by allowing the developer to treat each async call 
 ```swift
    let cc = ClosureChain()
    cc.try { link in
-   		someAsyncMethod() { data, error in 
-   			if let error = error {
-   				link.throw(error)
-   			}
-   			guard let data = data else {
-   				link.throw(Failure.missingDdata)
-   				return
-			}
-			// do something with `data`
+           someAsyncMethod() { data, error in 
+               if let error = error {
+                   link.throw(error)
+               }
+               guard let data = data else {
+                   link.throw(Failure.missingDdata)
+                   return
+            }
+            // do something with `data`
 
-	   		link.success() // required
-   		}
+               link.success() // required
+           }
    }
    cc.catch { error in
-   		// error handler
+           // error handler
    }
-   cc.start() 	// required
+   cc.start()     // required
 ```
 
 Note the familiar `try-catch` pattern.  However `try` is perfomed on the chain `cc`, and the `throw` is performed on the `link`.  As a convenience, you can simply use the Swift `throw` command directly within a try-block.
@@ -87,43 +87,43 @@ This is how this might look with `ClosureChain`:
 
 ```swift
 function closureChainExample() {
-   let cc = ClosureChain()
-   cc.try { link in
-   		getDataAsync() { result: Result<Data,Error> in  // result type is provided solely for context
-   			switch result {
-   				case .failure(let error):
-   					throw error				// C1
-   				case .success(let data):
-   					link.success(data)		// C2
-   			}
-   		}
-   }
-   
-   cc.try { data: Data, link in			    // C3
-   		convertToUIImage(data) { result: Result<UIImage,Error> in // result type is provided solely for context
-   			switch result {
-   				case .failure(let error):
-   					throw error
-   				case .success(let uiimage):
-   					link.success(uiimage)	// C4
-   			}
-   		}
-   }
-   
-   cc.try { data: Data, link in
-   		saveToDataStore(data) { error: Error? in // result type is provided solely for context
-   			if let error = error {
-   				throw error
-   			}
-   			link.success()					// C5
-   		}
-   }
-   
-   cc.catch { error in
-   		                                    // error handler
-   }
-   cc.start() 	                            // C6
-}                                           // C7
+    let cc = ClosureChain()
+    cc.try { link in
+           getDataAsync() { result: Result<Data,Error> in  // result type is provided solely for context
+               switch result {
+                   case .failure(let error):
+                       throw error  // C1
+                   case .success(let data):
+                       link.success(data)  // C2
+               }
+           }
+    }
+
+    cc.try { data: Data, link in // C3
+        convertToUIImage(data) { result: Result<UIImage,Error> in // result type is provided solely for context
+            switch result {
+                case .failure(let error):
+                    throw error
+                case .success(let uiimage):
+                    link.success(uiimage)  // C4
+            }
+        }
+    }
+
+    cc.try { data: Data, link in
+        saveToDataStore(data) { error: Error? in // result type is provided solely for context
+            if let error = error {
+                throw error
+            }
+            link.success()  // C5
+        }
+    }
+
+    cc.catch { error in
+        // error handler
+    }
+    cc.start() // C6
+}              // C7
 ```
 
 * [C1] we can use `throw` directly in a try block
