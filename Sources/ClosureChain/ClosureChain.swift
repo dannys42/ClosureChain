@@ -50,11 +50,15 @@ public class ClosureChain {
     private var numLinks = 0
     private var links: [LinkInfo] = []
     private var nextParam: Any?
-    private var catchHandler: CatchHandler = { _ in }
+    private var catchHandler: CatchHandler
 
     /// Initialize a closure chain
     public init() {
-        nextParam = nil
+        self.nextParam = nil
+        self.catchHandler = { _ in }
+        self.catchHandler = { _ in
+            self.reset()
+        }
     }
 
     /// Execute a block.
@@ -95,7 +99,10 @@ public class ClosureChain {
     /// This error handler is called if any try-block has thrown an error (or if `ClosureChain` throws an error).  No subsequent try-blocks will be executed.
     /// - Parameter completion: Error handler
     public func `catch`(_ completion: @escaping CatchHandler) {
-        self.catchHandler = completion
+        self.catchHandler = { error in
+            completion(error)
+            self.reset()
+        }
     }
 
     /// This method must be called at some point after all try-blocks have been defined.  No try-blocks will be executed otherwise.
@@ -115,6 +122,11 @@ public class ClosureChain {
 //            self.catchHandler(Failures.chainWasNeverStarted)
 //        }
 //        #endif
+    }
+
+    private func reset() {
+        self.links = []
+        self.nextParam = nil
     }
 
     private func popElements() -> LinkInfo? {
