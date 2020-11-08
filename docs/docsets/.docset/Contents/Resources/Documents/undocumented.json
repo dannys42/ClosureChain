@@ -1,0 +1,47 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/dannys/projects/ClosureChain/Sources/ClosureChain/ClosureChain.swift",
+      "line": 26,
+      "symbol": "ClosureChain.Failures.noParameterAvailable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dannys/projects/ClosureChain/Sources/ClosureChain/ClosureChain.swift",
+      "line": 55,
+      "symbol": "ClosureChain.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dannys/projects/ClosureChain/Sources/ClosureChain/ClosureChain.swift",
+      "line": 59,
+      "symbol": "ClosureChain.try(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dannys/projects/ClosureChain/Sources/ClosureChain/ClosureChain.swift",
+      "line": 71,
+      "symbol": "ClosureChain.try(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dannys/projects/ClosureChain/Sources/ClosureChain/ClosureChain.swift",
+      "line": 87,
+      "symbol": "ClosureChain.catch(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/dannys/projects/ClosureChain/Sources/ClosureChain/ClosureChain.swift",
+      "line": 91,
+      "symbol": "ClosureChain.start()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/dannys/projects/ClosureChain"
+}
