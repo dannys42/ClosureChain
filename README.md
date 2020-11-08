@@ -86,6 +86,7 @@ For simplicity, we'll assume all our async methods are using the `Result` protoc
 This is how this might look with `ClosureChain`:
 
 ```swift
+function closureChainExample() {
    let cc = ClosureChain()
    cc.try { link in
    		getDataAsync() { result: Result<Data,Error> in  // result type is provided solely for context
@@ -98,7 +99,7 @@ This is how this might look with `ClosureChain`:
    		}
    }
    
-   cc.try { data: Data, link in			// C3
+   cc.try { data: Data, link in			    // C3
    		convertToUIImage(data) { result: Result<UIImage,Error> in // result type is provided solely for context
    			switch result {
    				case .failure(let error):
@@ -119,9 +120,10 @@ This is how this might look with `ClosureChain`:
    }
    
    cc.catch { error in
-   		// error handler
+   		                                    // error handler
    }
-   cc.start() 	// required
+   cc.start() 	                            // C6
+}                                           // C7
 ```
 
 * [C1] we can use `throw` directly in a try block
@@ -129,6 +131,8 @@ This is how this might look with `ClosureChain`:
 * [C3] `data` must be declared with a type specified.
 * [C4] now passes a different data type to the next block
 * [C5] `.success()` must be called at the completion of the try-block, but need not pass any data.
+* [C6] `.start()` is required to execute try-blocks.  No blocks will be executed until this is called.
+* [C7] `cc` can be safely allowed to fall out-of-scope.  It does not need to be retained in a containing class variable.
 
 ## API Documentation
 
