@@ -51,7 +51,7 @@ However, this can become difficult to manage when you need to perform a number o
 
 Normally this requires nesting the async methods or the use of a state machine.  Both of which can be difficult to reason about.
 
-Closure Chains simplify this by allowing the developer to treat each async call as a `try` block (also referred to as a `Link` in a `ClosureChain`) with a single `catch` block to manage any errors.
+Closure Chains simplify this by allowing the developer to treat each async call as linkage of throwable closures. (i.e. links in a chain), with a single `catch` closure to manage any errors.
 
 ### Simple Example
 
@@ -60,29 +60,28 @@ Closure Chains simplify this by allowing the developer to treat each async call 
     chain.try { link in
         someAsyncMethod() { data, error in 
             if let error = error {
-                link.throw(error)
+                link.throw(error)               // `link.throw()` is identical to `throw`
             }
             guard let data = data else {
-                link.throw(Failure.missingDdata)
-                return
+                throw(Failure.missingDdata)     // `throw` is identical to `link.throw()`
             }
             // do something with `data`
 
-            link.success()      // required
+            link.success()                      // required
         }
     }
     chain.catch { error in
         // error handler
     }
-    chain.start()                    // required
+    chain.start()                               // required to start executing links
 ```
 
-Note the familiar `try-catch` pattern.  However `try` is perfomed on the chain `cc`, and the `throw` is performed on the `link`.  As a convenience, you can simply use the Swift `throw` command directly within a try-block.
+Note the familiar `try-catch` pattern.  However `try` is perfomed on the chain `chain`, and the `throw` is performed on the `link`.  As a convenience, you can simply use the Swift `throw` command directly within a try-block.
 
 There are two additional required functions:
 
  - `link.success()` is required to let `ClosureChain` know when an async task is complete
- - `cc.start()` is required to kick off execution of the chain.  No try blocks will be executed until the `.start()` command is initiated.
+ - `chain.start()` is required to kick off execution of the chain.  No links will be executed until the `.start()` command is initiated.
 
 ### Passing data
 
@@ -90,7 +89,8 @@ The above is not very useful when we only have one async operation.  But what if
 
  * Get raw image data from network
  * Convert raw data to a UIImage object.  Perhaps we have a long running async task here that will perform decryption, digital signature verification, and JSON deserialization
- * Save the UIImage to a remote data-store
+ * Do more background processing on UIImage
+ * Notify the user we're done
 
 For simplicity, we'll assume all our async methods are using the `Result` protocol.
 
@@ -100,50 +100,51 @@ This is how this might look with `ClosureChain`:
 function closureChainExample() {
     let chain = ClosureChain()
     chain.try { link in
-        getDataAsync() { result: Result<Data,Error> in  // result type is provided solely for context
+        getDataAsync() { result: Result<Data,Error> in  // result type is provided solely for context in this example
             switch result {
             case .failure(let error):
-                throw error             // C1
+                throw error             // We can `throw` directly in a link
             case .success(let data):
-                link.success(data)      // C2
+                link.success(data)      // Pass `data` to the next link
             }
         }
     }
 
-    chain.try { data: Data, link in     // C3
-        convertToUIImage(data) { result: Result<UIImage,Error> in // result type is provided solely for context
+    chain.try { data: Data, link in     // `data` type must match prior link.success() (this check is performed at run-time)
+        convertToUIImage(data) { result: Result<UIImage,Error> in   // result type is provided solely for context in this example
             switch result {
             case .failure(let error):
                 throw error
             case .success(let uiimage):
-                link.success(uiimage)   // C4
+                link.success(uiimage)   // Pass `uiimage` to the next link
             }
         }
     }
 
-    chain.try { data: Data, link in
-        saveToDataStore(data) { error: Error? in // result type is provided solely for context
+    chain.try { image: UIImage, link in // `image` type must match prior link.success()
+        processImage(image) { error: Error? in      // result type is provided solely for context in this example
             if let error = error {
                 throw error
             }
-            link.success()              // C5
+            link.success()              // Go to next link with no passed data
         }
+    }
+    chain.try { link in                 // Must not specify any parameter since none was given in last `link.success()`
+        // Notify the user we're done
+        link.success()                  // Required even though this is the last link
     }
 
     chain.catch { error in
         // error handler
     }
-    chain.start()                       // C6
-}                                       // C7
+    chain.start()                       // Required to start executing links
+}
 ```
 
-* [C1] we can use `throw` directly in a try block
-* [C2] the data is passed to [C3] as a typed parameter.  (This type-check is performed at run-time.)
-* [C3] `data` must be declared with a type specified.
-* [C4] now passes a different data type to the next block
-* [C5] `.success()` must be called at the completion of the try-block, but need not pass any data.
-* [C6] `.start()` is required to execute try-blocks.  No blocks will be executed until this is called.
-* [C7] `cc` can be safely allowed to fall out-of-scope.  It does not need to be retained in a containing class variable.
+Note: `chain` can be safely allowed to fall out-of-scope.  `chain` and the
+associated closures will not be released from memory until `link.success()` in
+the last link is called.
+
 
 ## API Documentation
 
