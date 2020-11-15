@@ -100,7 +100,7 @@ This is how this might look with `ClosureChain`:
 function closureChainExample() {
     let chain = ClosureChain()
     chain.try { link in
-        getDataAsync() { result: Result<Data,Error> in  // result type is provided solely for context in this example
+        getDataAsync() { result: Result<Data,Error> in  // Result type is provided solely for context in this example
             switch result {
             case .failure(let error):
                 throw error             // We can `throw` directly in a link
@@ -111,7 +111,7 @@ function closureChainExample() {
     }
 
     chain.try { data: Data, link in     // `data` type must match prior link.success() (this check is performed at run-time)
-        convertToUIImage(data) { result: Result<UIImage,Error> in   // result type is provided solely for context in this example
+        convertToUIImage(data) { result: Result<UIImage,Error> in   // Result type is provided solely for context in this example
             switch result {
             case .failure(let error):
                 throw error
@@ -122,7 +122,7 @@ function closureChainExample() {
     }
 
     chain.try { image: UIImage, link in // `image` type must match prior link.success()
-        processImage(image) { error: Error? in      // result type is provided solely for context in this example
+        processImage(image) { error: Error? in      // Error type is provided solely for context in this example
             if let error = error {
                 throw error
             }
@@ -141,10 +141,13 @@ function closureChainExample() {
 }
 ```
 
-Note: `chain` can be safely allowed to fall out-of-scope.  `chain` and the
-associated closures will not be released from memory until `link.success()` in
-the last link is called.
-
+Notes:
+ * `chain` can be safely allowed to fall out-of-scope.  `chain` and the
+   associated closures will not be released from memory until `link.success()`
+   in the last link is called.
+ * ClosureChains make no use of DispatchQueue or OperationQueue.  Therefore
+   there is no guarantee that any link is executing on any specific
+   queue/thread.
 
 ## API Documentation
 
