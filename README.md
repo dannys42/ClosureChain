@@ -62,14 +62,14 @@ Closure Chains simplify this by allowing the developer to treat each async call 
             if let error = error {
                 link.throw(error)
             }
-                guard let data = data else {
-                    link.throw(Failure.missingDdata)
-                    return
-                }
-                // do something with `data`
+            guard let data = data else {
+                link.throw(Failure.missingDdata)
+                return
+            }
+            // do something with `data`
 
-                link.success()      // required
-           }
+            link.success()      // required
+        }
     }
     chain.catch { error in
         // error handler
