@@ -60,10 +60,11 @@ Closure Chains simplify this by allowing the developer to treat each async call 
     chain.try { link in
         someAsyncMethod() { data, error in 
             if let error = error {
-                link.throw(error)               // `link.throw()` is identical to `throw`
+                link.throw(error)                   // use `link.throw()` since completion block is not throwable
             }
             guard let data = data else {
-                throw(Failure.missingDdata)     // `throw` is identical to `link.throw()`
+                link.throw(Failure.missingDdata)    // use `link.throw()` since completion block is not throwable
+                return
             }
             // do something with `data`
 
@@ -103,7 +104,7 @@ function closureChainExample() {
         getDataAsync() { result: Result<Data,Error> in  // Result type is provided solely for context in this example
             switch result {
             case .failure(let error):
-                throw error             // We can `throw` directly in a link
+                link.throw(error)       // use link.throw() since completion handler is not throwable
             case .success(let data):
                 link.success(data)      // Pass `data` to the next link
             }
@@ -114,7 +115,7 @@ function closureChainExample() {
         convertToUIImage(data) { result: Result<UIImage,Error> in   // Result type is provided solely for context in this example
             switch result {
             case .failure(let error):
-                throw error
+                link.throw(error)       // use link.throw() since completion handler is not throwable
             case .success(let uiimage):
                 link.success(uiimage)   // Pass `uiimage` to the next link
             }
@@ -123,10 +124,14 @@ function closureChainExample() {
 
     chain.try { image: UIImage, link in // `image` type must match prior link.success()
         processImage(image) { error: Error? in      // Error type is provided solely for context in this example
-            if let error = error {
-                throw error
+            do {
+                if let error = error {
+                    throw(error)        // can use do-catch to allow `throws` to pass to `link.throw()`
+                }
+                link.success()          // Go to next link with no passed data
+            } catch {
+                link.throw(error)
             }
-            link.success()              // Go to next link with no passed data
         }
     }
     chain.try { link in                 // Must not specify any parameter since none was given in last `link.success()`
