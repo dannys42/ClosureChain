@@ -60,7 +60,7 @@ final class ClosureChainTests: XCTestCase {
         cc.try { link in
             defer { g.leave() }
             resolvedBlockSequence.append("a")
-            link.succcess(inputValues[0])
+            link.success(inputValues[0])
         }
 
         g.enter()
@@ -68,14 +68,14 @@ final class ClosureChainTests: XCTestCase {
             defer { g.leave() }
             resolvedBlockSequence.append("b")
             result.append(x)
-            link.succcess(inputValues[1])
+            link.success(inputValues[1])
         }
 
         g.enter()
         cc.try { link in
             defer { g.leave() }
             resolvedBlockSequence.append("c")
-            link.succcess()
+            link.success()
         }
 
         cc.catch { (error) in
@@ -103,21 +103,21 @@ final class ClosureChainTests: XCTestCase {
         g.enter()
         cc.try { chain in
             defer { g.leave() }
-            chain.succcess(inputValuse[0])
+            chain.success(inputValuse[0])
         }
 
         g.enter()
         cc.try { (x: Int, chain) in
             defer { g.leave() }
             result.append(x)
-            chain.succcess(inputValuse[1])
+            chain.success(inputValuse[1])
         }
 
         g.enter()
         cc.try { (str: String, chain) in
             defer { g.leave() }
             result.append(str)
-            chain.succcess()
+            chain.success()
         }
 
         cc.catch { (error) in

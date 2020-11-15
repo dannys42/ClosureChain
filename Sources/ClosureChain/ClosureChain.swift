@@ -181,7 +181,7 @@ public extension ClosureChain {
 
         /// Signify a successful completion of a `Link`.
         /// - Parameter param: An optional parameter may be specified, to be passed to the next `Link` (try-block)
-        public func succcess(_ param: Any?=nil) {
+        public func success(_ param: Any?=nil) {
             guard !didComplete else {
                 self.didThrow(Failures.cannotSucceedTwicePerTry)
                 return
