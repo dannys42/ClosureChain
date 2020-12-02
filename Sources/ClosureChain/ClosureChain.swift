@@ -199,6 +199,17 @@ public extension ClosureChain {
             didComplete = true
             didThrow(error)
         }
+
+        /// Convenience method to call `success()` or `throw` as appropriate for the given `Result`
+        /// - Parameter result: `Result` to evaluate
+        public func `return`<RequiredType>(_ result: Result<RequiredType, Error>) {
+            switch result {
+            case .success(let successValue):
+                self.success(successValue)
+            case .failure(let errorValue):
+                self.throw(errorValue)
+            }
+        }
     }
 }
 

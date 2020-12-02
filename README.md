@@ -154,6 +154,44 @@ Notes:
    there is no guarantee that any link is executing on any specific
    queue/thread.
 
+### Even Better
+
+If your async methods have completion handlers that take a single Result parameter, as in the above example, you can further reduce your code:
+
+
+```swift
+function closureChainExample() {
+    let chain = ClosureChain()
+    chain.try { link in
+        getDataAsync() { result: Result<Data,Error> in  // Result type is provided solely for context in this example
+        	link.return(result)           // calls link.throw() or link.success() appropriately
+        }
+    }
+
+    chain.try { data: Data, link in     // `data` type must match prior link.success() (this check is performed at run-time)
+        convertToUIImage(data) { result: Result<UIImage,Error> in   // Result type is provided solely for context in this example
+            link.return(result)           // calls link.throw() or link.success() appropriately
+        }
+    }
+
+    chain.try { image: UIImage, link in // `image` type must match prior link.success()
+        processImage(image) { result: Result<UIImage,Error> in      // Result type is provided solely for context in this example
+        	link.return(result)
+        }
+    }
+    chain.try { link in                 // Must not specify any parameter since none was given in last `link.success()`
+        // Notify the user we're done
+        link.success()                  // Required even though this is the last link
+    }
+
+    chain.catch { error in
+        // error handler
+    }
+    chain.start()                       // Required to start executing links
+}
+```
+
+
 ## API Documentation
 
 For more information visit our [API reference](https://dannys42.github.io/ClosureChain/).

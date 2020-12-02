@@ -2,6 +2,9 @@ import XCTest
 @testable import ClosureChain
 
 final class ClosureChainTests: XCTestCase {
+    enum Failures: Error {
+        case someFailure
+    }
     /// A typical async method that can possibly succeed or fail
     /// - Parameter completion: completion handler executed on success
     func someAsyncThing(delay: TimeInterval, result: Result<Int,Error>, _ completion: @escaping (Result<Int,Error>)->Void) {
@@ -9,6 +12,23 @@ final class ClosureChainTests: XCTestCase {
             completion(result)
         }
     }
+
+    /// Stand-in for function with completion handler using Result type that always succeeds
+    /// - Parameters:
+    ///   - value: Success value to return
+    ///   - completion: completion handler to call
+    func callSuccess<Value>(value: Value, _ completion: (Result<Value, Error>)->Void) {
+        completion(.success(value))
+    }
+
+    /// Stand-in for function with completion handler using Result type that always fails
+    /// - Parameters:
+    ///   - error: Error value to return
+    ///   - completion: completion handler to call
+    func callFailure(error: Error, _ completion: (Result<Int, Error>)->Void) {
+        completion(.failure(error))
+    }
+
     func testThat_ChainWithNoTries_HasNoError() throws {
         var foundError: Error? = nil
         repeat {
@@ -94,8 +114,8 @@ final class ClosureChainTests: XCTestCase {
 
     func testThat_Chain_CanPassParameter_OfDifferentTypes() {
         let cc = ClosureChain()
-        let inputValuse: [Any] = [4, "Foo"]
-        let expectedValues = inputValuse
+        let inputValues: [Any] = [4, "Foo"]
+        let expectedValues = inputValues
         var result: [Any] = []
         var foundError: Error? = nil
         let g = DispatchGroup()
@@ -103,14 +123,14 @@ final class ClosureChainTests: XCTestCase {
         g.enter()
         cc.try { chain in
             defer { g.leave() }
-            chain.success(inputValuse[0])
+            chain.success(inputValues[0])
         }
 
         g.enter()
         cc.try { (x: Int, chain) in
             defer { g.leave() }
             result.append(x)
-            chain.success(inputValuse[1])
+            chain.success(inputValues[1])
         }
 
         g.enter()
@@ -130,8 +150,100 @@ final class ClosureChainTests: XCTestCase {
 
         XCTAssertNil(foundError, "Expected no errors.  Found: \(foundError!)")
         XCTAssertEqual(expectedValues.count, result.count, "Expected same number of expected and push values")
-        XCTAssertEqual(expectedValues[0] as? Int, inputValuse[0] as? Int, "Expected result[0] == 4")
-        XCTAssertEqual(expectedValues[1] as? String, inputValuse[1] as? String, "Expected result[1] == 'Foo'")
+        XCTAssertEqual(expectedValues[0] as? Int, inputValues[0] as? Int, "Expected result[0] == 4")
+        XCTAssertEqual(expectedValues[1] as? String, inputValues[1] as? String, "Expected result[1] == 'Foo'")
+    }
+
+    func testThat_SuccessReturns_ContinueChain() {
+        let cc = ClosureChain()
+        let inputValues: [Any] = [4, "Foo"]
+        let expectedValues = inputValues
+        var result: [Any] = []
+        var foundError: Error? = nil
+        let g = DispatchGroup()
+
+        g.enter()
+        cc.try { link in
+            defer { g.leave() }
+            self.callSuccess(value: inputValues[0]) { (result) in
+                link.return(result)
+            }
+        }
+
+        g.enter()
+        cc.try { (x: Int, link) in
+            defer { g.leave() }
+            result.append(x)
+            self.callSuccess(value: inputValues[1]) { (result) in
+                link.return(result)
+            }
+        }
+
+        g.enter()
+        cc.try { (str: String, link) in
+            defer { g.leave() }
+            result.append(str)
+            link.success()
+        }
+
+        cc.catch { (error) in
+            foundError = error
+        }
+
+        cc.start()
+
+        _ = g.wait(timeout: .now()+5)
+
+        XCTAssertNil(foundError, "Expected no errors.  Found: \(foundError!)")
+        XCTAssertEqual(expectedValues.count, result.count, "Expected same number of expected and push values")
+        XCTAssertEqual(expectedValues[0] as? Int, inputValues[0] as? Int, "Expected result[0] == 4")
+        XCTAssertEqual(expectedValues[1] as? String, inputValues[1] as? String, "Expected result[1] == 'Foo'")
+    }
+
+    func testThat_ErrorReturns_StopChain() {
+        let cc = ClosureChain()
+        let inputValues: [Any] = [4, "Foo"]
+        let expectedValues: [Any] = [4]
+        var result: [Any] = []
+        var foundError: Error? = nil
+        let expectedError = Failures.someFailure
+        let g = DispatchGroup()
+
+        g.enter()
+        cc.try { link in
+            defer { g.leave() }
+            self.callSuccess(value: inputValues[0]) { (result) in
+                link.return(result)
+            }
+        }
+
+        g.enter()
+        cc.try { (x: Int, link) in
+            defer { g.leave() }
+            result.append(x)
+            self.callFailure(error: Failures.someFailure) { (result) in
+                link.return(result)
+            }
+        }
+
+        g.enter()
+        cc.try { (str: String, link) in
+            defer { g.leave() }
+            result.append(str)
+            link.success()
+        }
+
+        cc.catch { (error) in
+            foundError = error
+        }
+
+        cc.start()
+
+        _ = g.wait(timeout: .now()+5)
+
+        XCTAssertEqual(foundError as? Failures, expectedError, "Expected error to be \(expectedError.localizedDescription)  Found instead: \(foundError?.localizedDescription ?? "(n/a)")")
+        XCTAssertEqual(expectedValues.count, result.count, "Expected same number of expected and push values")
+        XCTAssertEqual(expectedValues[0] as? Int, inputValues[0] as? Int, "Expected result[0] == 4")
     }
 /*
     static var allTests = [
