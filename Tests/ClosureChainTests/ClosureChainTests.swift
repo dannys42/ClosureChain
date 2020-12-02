@@ -66,14 +66,14 @@ final class ClosureChainTests: XCTestCase {
     }
  */
 
-    func testThat_Chain_CannotIgnoreParameter() {
+    func testThat_Chain_CanIgnoreParameter() {
         let cc = ClosureChain()
         let inputValues: [Any] = [ 4, "Foo" ]
         let expectedValues: [Any] = [ 4 ]
         var result: [Any] = []
         var foundError: Error? = nil
         let g = DispatchGroup()
-        let expectedBlockSequence = [ "a", "b" ]
+        let expectedBlockSequence = [ "a", "b", "c" ]
         var resolvedBlockSequence: [String] = []
 
         g.enter()
@@ -107,11 +107,57 @@ final class ClosureChainTests: XCTestCase {
         _ = g.wait(timeout: .now()+5)
 
         XCTAssertEqual(expectedBlockSequence, resolvedBlockSequence, "Expected blocks: \(expectedBlockSequence)  Resolved blocks: \(resolvedBlockSequence)")
-        XCTAssertEqual(foundError as? ClosureChain.Failures, ClosureChain.Failures.parameterTypeMismatch(Void.self, String.self), "Expected parameterTypeMismatch error")
+        XCTAssertNil(foundError, "No error expected")
         XCTAssertEqual(expectedValues.count, result.count, "Expected same number of expected and push values")
         XCTAssertEqual(expectedValues[0] as? Int, inputValues[0] as? Int, "Expected result[0] == 4")
     }
 
+    func testThat_PassingWrongParameter_Fails() {
+        let cc = ClosureChain()
+        let inputValues: [Any] = [ 4, "Foo" ]
+        let expectedValues: [Any] = [ 4 ]
+        var result: [Any] = []
+        var foundError: Error? = nil
+        let g = DispatchGroup()
+        let expectedBlockSequence = [ "a", "b" ]
+        var resolvedBlockSequence: [String] = []
+
+        g.enter()
+        cc.try { link in
+            defer { g.leave() }
+            resolvedBlockSequence.append("a")
+            link.success(inputValues[0])
+        }
+
+        g.enter()
+        cc.try { (x: Int, link) in
+            defer { g.leave() }
+            resolvedBlockSequence.append("b")
+            result.append(x)
+            link.success(inputValues[1])
+        }
+
+        g.enter()
+        // wronge parameter type should fail
+        cc.try { (v: Date, link) in
+            defer { g.leave() }
+            resolvedBlockSequence.append("c")
+            link.success()
+        }
+
+        cc.catch { (error) in
+            foundError = error
+        }
+
+        cc.start()
+
+        _ = g.wait(timeout: .now()+5)
+
+        XCTAssertEqual(expectedBlockSequence, resolvedBlockSequence, "Expected blocks: \(expectedBlockSequence)  Resolved blocks: \(resolvedBlockSequence)")
+        XCTAssertEqual(foundError as? ClosureChain.Failures, ClosureChain.Failures.parameterTypeMismatch(Date.self, String.self), "Expected parameterTypeMismatch error")
+        XCTAssertEqual(expectedValues.count, result.count, "Expected same number of expected and push values")
+        XCTAssertEqual(expectedValues[0] as? Int, inputValues[0] as? Int, "Expected result[0] == 4")
+    }
     func testThat_Chain_CanPassParameter_OfDifferentTypes() {
         let cc = ClosureChain()
         let inputValues: [Any] = [4, "Foo"]

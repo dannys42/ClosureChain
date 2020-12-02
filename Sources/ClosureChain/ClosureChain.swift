@@ -145,7 +145,8 @@ public class ClosureChain {
         if let nextParam = self.nextParam {
             let expectedType = link.paramType
             let actualType = type(of: nextParam)
-            guard expectedType == actualType else {
+            // link must have matching parameter data type or it may ignore the parameter altogether
+            guard expectedType == actualType || expectedType == Void.self else {
                 self.catchHandler(Failures.parameterTypeMismatch(expectedType, actualType) )
                 return
             }

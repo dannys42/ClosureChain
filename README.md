@@ -68,13 +68,13 @@ Closure Chains simplify this by allowing the developer to treat each async call 
             }
             // do something with `data`
 
-            link.success()                      // required
+            link.success()                          // required
         }
     }
     chain.catch { error in
         // error handler
     }
-    chain.start()                               // required to start executing links
+    chain.start()                                   // required to start executing links
 ```
 
 Note the familiar `try-catch` pattern.  However `try` is perfomed on the chain `chain`, and the `throw` is performed on the `link`.  As a convenience, you can simply use the Swift `throw` command directly within a try-block.
@@ -134,7 +134,7 @@ function closureChainExample() {
             }
         }
     }
-    chain.try { link in                 // Must not specify any parameter since none was given in last `link.success()`
+    chain.try { link in                 // It is safe to ignore the passed parameter from the last `link.success()`
         // Notify the user we're done
         link.success()                  // Required even though this is the last link
     }
@@ -154,7 +154,7 @@ Notes:
    there is no guarantee that any link is executing on any specific
    queue/thread.
 
-### Even Better
+### Results can be Even Better
 
 If your async methods have completion handlers that take a single Result parameter, as in the above example, you can further reduce your code:
 
@@ -179,7 +179,7 @@ function closureChainExample() {
         	link.return(result)
         }
     }
-    chain.try { link in                 // Must not specify any parameter since none was given in last `link.success()`
+    chain.try { link in                 // It is safe to ignore the passed parameter from the last `link.success()`
         // Notify the user we're done
         link.success()                  // Required even though this is the last link
     }
