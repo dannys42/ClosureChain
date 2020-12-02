@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>  Reference</title>
+    <title>ClosureChain  Reference</title>
     <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="css/highlight.css" />
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <script src="js/jquery.min.js" defer></script>
     <script src="js/jazzy.js" defer></script>
     
@@ -13,58 +13,58 @@
     <script src="js/jazzy.search.js" defer></script>
   </head>
   <body>
-
-
-    <a title="  Reference"></a>
-
-    <header class="header">
-      <p class="header-col header-col--primary">
-        <a class="header-link" href="index.html">
-           Docs
-        </a>
-         (95% documented)
-      </p>
-    
-      <p class="header-col--secondary">
-        <form role="search" action="search.json">
-          <input type="text" placeholder="Search documentation" data-typeahead>
-        </form>
-      </p>
-    
-    
+    <a title="ClosureChain  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">ClosureChain 0.0.1 Docs</a> (95% documented)</p>
+        <p class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </p>
+      </div>
     </header>
-
-    <p class="breadcrumbs">
-      <a class="breadcrumb" href="index.html"> Reference</a>
-      <img class="carat" src="img/carat.png" />
-        Reference
-    </p>
-
     <div class="content-wrapper">
-      <nav class="navigation">
+      <p id="breadcrumbs">
+        <a href="index.html">ClosureChain Reference</a>
+        <img id="carat" src="img/carat.png" />
+        ClosureChain  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
         <ul class="nav-groups">
           <li class="nav-group-name">
-            <a class="nav-group-name-link" href="Classes.html">Classes</a>
+            <a href="Classes.html">Classes</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Classes/ClosureChain.html">ClosureChain</a>
+                <a href="Classes/ClosureChain.html">ClosureChain</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Classes/ClosureChain/Failures.html">– Failures</a>
+                <a href="Classes/ClosureChain/Failures.html">– Failures</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="Classes/ClosureChain/Link.html">– Link</a>
+                <a href="Classes/ClosureChain/Link.html">– Link</a>
               </li>
             </ul>
           </li>
         </ul>
       </nav>
       <article class="main-content">
-
-        <section class="section">
-          <div class="section-content top-matter">
+        <section>
+          <section class="section">
             
-            <h1 id='closurechain' class='heading'>ClosureChain</h1>
+            <p align="center">
+<a href="https://github.com/dannys42/ClosureChain/actions?query=workflow%3ASwift"><img src="https://github.com/dannys42/ClosureChain/workflows/Swift/badge.svg" alt="build status"></a>
+<img src="https://img.shields.io/badge/os-macOS-green.svg?style=flat" alt="macOS">
+<img src="https://img.shields.io/badge/os-iOS-green.svg?style=flat" alt="iOS">
+<img src="https://img.shields.io/badge/os-linux-green.svg?style=flat" alt="Linux">
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache2-blue.svg?style=flat" alt="Apache 2"></a>
+<br/>
+<a href="https://swiftpackageindex.com/dannys42/ClosureChain"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdannys42%2FClosureChain%2Fbadge%3Ftype%3Dswift-versions"></a>
+<a href="https://swiftpackageindex.com/dannys42/ClosureChain"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fdannys42%2FClosureChain%2Fbadge%3Ftype%3Dplatforms"></a>
+</p>
+<h1 id='closurechain' class='heading'>ClosureChain</h1>
 
 <p><code><a href="Classes/ClosureChain.html">ClosureChain</a></code> simplifies sequential async completion methods for Swift.  It provides a familiar try-catch pattern for sequential async methods.</p>
 <h2 id='installation' class='heading'>Installation</h2>
@@ -85,44 +85,44 @@
 <h2 id='usage' class='heading'>Usage</h2>
 
 <p>Typically in Swift, network or other async methods make use of completion handlers to streamline work.  A typical method signature looks like this:</p>
-<pre class="highlight swift"><code>  <span class="kd">func</span> <span class="nf">someAsyncMethod</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Data</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span><span class="o">-&gt;</span><span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
-  <span class="p">}</span>
+<pre class="highlight swift"><code>    <span class="kd">func</span> <span class="nf">someAsyncMethod</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">(</span><span class="kt">Data</span><span class="p">?,</span> <span class="kt">Error</span><span class="p">?)</span><span class="o">-&gt;</span><span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
 </code></pre>
 
 <p>However, this can become difficult to manage when you need to perform a number of async functions, each relying on success data from the previous call.</p>
 
 <p>Normally this requires nesting the async methods or the use of a state machine.  Both of which can be difficult to reason about.</p>
 
-<p>Closure Chains simplify this by allowing the developer to treat each async call as a <code>try</code> block (also referred to as a <code>Link</code> in a <code><a href="Classes/ClosureChain.html">ClosureChain</a></code>) with a single <code>catch</code> block to manage any errors.</p>
+<p>Closure Chains simplify this by allowing the developer to treat each async call as linkage of throwable closures. (i.e. links in a chain), with a single <code>catch</code> closure to manage any errors.</p>
 <h3 id='simple-example' class='heading'>Simple Example</h3>
-<pre class="highlight swift"><code>   <span class="k">let</span> <span class="nv">cc</span> <span class="o">=</span> <span class="kt">ClosureChain</span><span class="p">()</span>
-   <span class="n">cc</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="n">link</span> <span class="k">in</span>
-           <span class="nf">someAsyncMethod</span><span class="p">()</span> <span class="p">{</span> <span class="n">data</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span> 
-               <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
-                   <span class="n">link</span><span class="o">.</span><span class="nf">throw</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-               <span class="p">}</span>
-               <span class="k">guard</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{</span>
-                   <span class="n">link</span><span class="o">.</span><span class="nf">throw</span><span class="p">(</span><span class="kt">Failure</span><span class="o">.</span><span class="n">missingDdata</span><span class="p">)</span>
-                   <span class="k">return</span>
+<pre class="highlight swift"><code>    <span class="k">let</span> <span class="nv">chain</span> <span class="o">=</span> <span class="kt">ClosureChain</span><span class="p">()</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="n">link</span> <span class="k">in</span>
+        <span class="nf">someAsyncMethod</span><span class="p">()</span> <span class="p">{</span> <span class="n">data</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span> 
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">throw</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>                   <span class="c1">// use `link.throw()` since completion block is not throwable</span>
+            <span class="p">}</span>
+            <span class="k">guard</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">throw</span><span class="p">(</span><span class="kt">Failure</span><span class="o">.</span><span class="n">missingDdata</span><span class="p">)</span>    <span class="c1">// use `link.throw()` since completion block is not throwable</span>
+                <span class="k">return</span>
             <span class="p">}</span>
             <span class="c1">// do something with `data`</span>
 
-               <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">()</span> <span class="c1">// required</span>
-           <span class="p">}</span>
-   <span class="p">}</span>
-   <span class="n">cc</span><span class="o">.</span><span class="k">catch</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
-           <span class="c1">// error handler</span>
-   <span class="p">}</span>
-   <span class="n">cc</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>     <span class="c1">// required</span>
+            <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">()</span>                          <span class="c1">// required</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">catch</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
+        <span class="c1">// error handler</span>
+    <span class="p">}</span>
+    <span class="n">chain</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>                                   <span class="c1">// required to start executing links</span>
 </code></pre>
 
-<p>Note the familiar <code>try-catch</code> pattern.  However <code>try</code> is perfomed on the chain <code>cc</code>, and the <code>throw</code> is performed on the <code>link</code>.  As a convenience, you can simply use the Swift <code>throw</code> command directly within a try-block.</p>
+<p>Note the familiar <code>try-catch</code> pattern.  However <code>try</code> is perfomed on the chain <code>chain</code>, and the <code>throw</code> is performed on the <code>link</code>.  As a convenience, you can simply use the Swift <code>throw</code> command directly within a try-block.</p>
 
 <p>There are two additional required functions:</p>
 
 <ul>
 <li><code>link.success()</code> is required to let <code><a href="Classes/ClosureChain.html">ClosureChain</a></code> know when an async task is complete</li>
-<li><code>cc.start()</code> is required to kick off execution of the chain.  No try blocks will be executed until the <code>.start()</code> command is initiated.</li>
+<li><code>chain.start()</code> is required to kick off execution of the chain.  No links will be executed until the <code>.start()</code> command is initiated.</li>
 </ul>
 <h3 id='passing-data' class='heading'>Passing data</h3>
 
@@ -131,61 +131,104 @@
 <ul>
 <li>Get raw image data from network</li>
 <li>Convert raw data to a UIImage object.  Perhaps we have a long running async task here that will perform decryption, digital signature verification, and JSON deserialization</li>
-<li>Save the UIImage to a remote data-store</li>
+<li>Do more background processing on UIImage</li>
+<li>Notify the user we&rsquo;re done</li>
 </ul>
 
 <p>For simplicity, we&rsquo;ll assume all our async methods are using the <code>Result</code> protocol.</p>
 
 <p>This is how this might look with <code><a href="Classes/ClosureChain.html">ClosureChain</a></code>:</p>
 <pre class="highlight swift"><code><span class="n">function</span> <span class="nf">closureChainExample</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">let</span> <span class="nv">cc</span> <span class="o">=</span> <span class="kt">ClosureChain</span><span class="p">()</span>
-    <span class="n">cc</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="n">link</span> <span class="k">in</span>
-           <span class="nf">getDataAsync</span><span class="p">()</span> <span class="p">{</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span><span class="kt">Error</span><span class="o">&gt;</span> <span class="k">in</span>  <span class="c1">// result type is provided solely for context</span>
-               <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
-                   <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
-                       <span class="k">throw</span> <span class="n">error</span>              <span class="c1">// C1</span>
-                   <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">data</span><span class="p">):</span>
-                       <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>       <span class="c1">// C2</span>
-               <span class="p">}</span>
-           <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="n">cc</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="n">link</span> <span class="k">in</span>                <span class="c1">// C3</span>
-        <span class="nf">convertToUIImage</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">UIImage</span><span class="p">,</span><span class="kt">Error</span><span class="o">&gt;</span> <span class="k">in</span> <span class="c1">// result type is provided solely for context</span>
+    <span class="k">let</span> <span class="nv">chain</span> <span class="o">=</span> <span class="kt">ClosureChain</span><span class="p">()</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="n">link</span> <span class="k">in</span>
+        <span class="nf">getDataAsync</span><span class="p">()</span> <span class="p">{</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span><span class="kt">Error</span><span class="o">&gt;</span> <span class="k">in</span>  <span class="c1">// Result type is provided solely for context in this example</span>
             <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
-                    <span class="k">throw</span> <span class="n">error</span>
-                <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">uiimage</span><span class="p">):</span>
-                    <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="n">uiimage</span><span class="p">)</span>       <span class="c1">// C4</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">throw</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>       <span class="c1">// use link.throw() since completion handler is not throwable</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">data</span><span class="p">):</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>      <span class="c1">// Pass `data` to the next link</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="n">cc</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="n">link</span> <span class="k">in</span>
-        <span class="nf">saveToDataStore</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?</span> <span class="k">in</span> <span class="c1">// result type is provided solely for context</span>
-            <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
-                <span class="k">throw</span> <span class="n">error</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="n">link</span> <span class="k">in</span>     <span class="c1">// `data` type must match prior link.success() (this check is performed at run-time)</span>
+        <span class="nf">convertToUIImage</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">UIImage</span><span class="p">,</span><span class="kt">Error</span><span class="o">&gt;</span> <span class="k">in</span>   <span class="c1">// Result type is provided solely for context in this example</span>
+            <span class="k">switch</span> <span class="n">result</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">throw</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>       <span class="c1">// use link.throw() since completion handler is not throwable</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">uiimage</span><span class="p">):</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="n">uiimage</span><span class="p">)</span>   <span class="c1">// Pass `uiimage` to the next link</span>
             <span class="p">}</span>
-            <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">()</span>                      <span class="c1">// C5</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="n">cc</span><span class="o">.</span><span class="k">catch</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="n">link</span> <span class="k">in</span> <span class="c1">// `image` type must match prior link.success()</span>
+        <span class="nf">processImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="p">{</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?</span> <span class="k">in</span>      <span class="c1">// Error type is provided solely for context in this example</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
+                    <span class="nf">throw</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>        <span class="c1">// can use do-catch to allow `throws` to pass to `link.throw()`</span>
+                <span class="p">}</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">()</span>          <span class="c1">// Go to next link with no passed data</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+                <span class="n">link</span><span class="o">.</span><span class="nf">throw</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="n">link</span> <span class="k">in</span>                 <span class="c1">// It is safe to ignore the passed parameter from the last `link.success()`</span>
+        <span class="c1">// Notify the user we're done</span>
+        <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">()</span>                  <span class="c1">// Required even though this is the last link</span>
+    <span class="p">}</span>
+
+    <span class="n">chain</span><span class="o">.</span><span class="k">catch</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
         <span class="c1">// error handler</span>
     <span class="p">}</span>
-    <span class="n">cc</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>                                  <span class="c1">// C6</span>
-<span class="p">}</span>                                               <span class="c1">// C7</span>
+    <span class="n">chain</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>                       <span class="c1">// Required to start executing links</span>
+<span class="p">}</span>
 </code></pre>
 
+<p>Notes:</p>
+
 <ul>
-<li>[C1] we can use <code>throw</code> directly in a try block</li>
-<li>[C2] the data is passed to [C3] as a typed parameter.  (This type-check is performed at run-time.)</li>
-<li>[C3] <code>data</code> must be declared with a type specified.</li>
-<li>[C4] now passes a different data type to the next block</li>
-<li>[C5] <code>.success()</code> must be called at the completion of the try-block, but need not pass any data.</li>
-<li>[C6] <code>.start()</code> is required to execute try-blocks.  No blocks will be executed until this is called.</li>
-<li>[C7] <code>cc</code> can be safely allowed to fall out-of-scope.  It does not need to be retained in a containing class variable.</li>
+<li><code>chain</code> can be safely allowed to fall out-of-scope.  <code>chain</code> and the
+associated closures will not be released from memory until <code>link.success()</code>
+in the last link is called.</li>
+<li>ClosureChains make no use of DispatchQueue or OperationQueue.  Therefore
+there is no guarantee that any link is executing on any specific
+queue/thread.</li>
 </ul>
+<h3 id='results-can-be-even-better' class='heading'>Results can be Even Better</h3>
+
+<p>If your async methods have completion handlers that take a single Result parameter, as in the above example, you can further reduce your code:</p>
+<pre class="highlight swift"><code><span class="n">function</span> <span class="nf">closureChainExample</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">chain</span> <span class="o">=</span> <span class="kt">ClosureChain</span><span class="p">()</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="n">link</span> <span class="k">in</span>
+        <span class="nf">getDataAsync</span><span class="p">()</span> <span class="p">{</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Data</span><span class="p">,</span><span class="kt">Error</span><span class="o">&gt;</span> <span class="k">in</span>  <span class="c1">// Result type is provided solely for context in this example</span>
+            <span class="n">link</span><span class="o">.</span><span class="nf">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>           <span class="c1">// calls link.throw() or link.success() appropriately</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="n">link</span> <span class="k">in</span>     <span class="c1">// `data` type must match prior link.success() (this check is performed at run-time)</span>
+        <span class="nf">convertToUIImage</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">UIImage</span><span class="p">,</span><span class="kt">Error</span><span class="o">&gt;</span> <span class="k">in</span>   <span class="c1">// Result type is provided solely for context in this example</span>
+            <span class="n">link</span><span class="o">.</span><span class="nf">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>           <span class="c1">// calls link.throw() or link.success() appropriately</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="n">link</span> <span class="k">in</span> <span class="c1">// `image` type must match prior link.success()</span>
+        <span class="nf">processImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="p">{</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">UIImage</span><span class="p">,</span><span class="kt">Error</span><span class="o">&gt;</span> <span class="k">in</span>      <span class="c1">// Result type is provided solely for context in this example</span>
+            <span class="n">link</span><span class="o">.</span><span class="nf">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">chain</span><span class="o">.</span><span class="k">try</span> <span class="p">{</span> <span class="n">link</span> <span class="k">in</span>                 <span class="c1">// It is safe to ignore the passed parameter from the last `link.success()`</span>
+        <span class="c1">// Notify the user we're done</span>
+        <span class="n">link</span><span class="o">.</span><span class="nf">success</span><span class="p">()</span>                  <span class="c1">// Required even though this is the last link</span>
+    <span class="p">}</span>
+
+    <span class="n">chain</span><span class="o">.</span><span class="k">catch</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
+        <span class="c1">// error handler</span>
+    <span class="p">}</span>
+    <span class="n">chain</span><span class="o">.</span><span class="nf">start</span><span class="p">()</span>                       <span class="c1">// Required to start executing links</span>
+<span class="p">}</span>
+</code></pre>
 <h2 id='api-documentation' class='heading'>API Documentation</h2>
 
 <p>For more information visit our <a href="https://dannys42.github.io/ClosureChain/">API reference</a>.</p>
@@ -193,16 +236,14 @@
 
 <p>This library is licensed under Apache 2.0. The full license text is available in <a href="LICENSE">LICENSE</a>.</p>
 
-          </div>
+          </section>
         </section>
-
-
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="https://github.com/dannys42/ClosureChain" target="_blank" rel="external">dannys42</a>. All rights reserved. (Last updated: 2020-12-01)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.6</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
       </article>
     </div>
-    <section class="footer">
-      <p>&copy; 2020 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2020-11-07)</p>
-      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.5</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
-    </section>
   </body>
 </div>
 </html>
