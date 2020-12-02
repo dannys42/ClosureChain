@@ -164,7 +164,7 @@ function closureChainExample() {
     let chain = ClosureChain()
     chain.try { link in
         getDataAsync() { result: Result<Data,Error> in  // Result type is provided solely for context in this example
-        	link.return(result)           // calls link.throw() or link.success() appropriately
+            link.return(result)           // calls link.throw() or link.success() appropriately
         }
     }
 
@@ -176,7 +176,7 @@ function closureChainExample() {
 
     chain.try { image: UIImage, link in // `image` type must match prior link.success()
         processImage(image) { result: Result<UIImage,Error> in      // Result type is provided solely for context in this example
-        	link.return(result)
+            link.return(result)
         }
     }
     chain.try { link in                 // It is safe to ignore the passed parameter from the last `link.success()`
