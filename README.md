@@ -156,7 +156,14 @@ Notes:
 
 ### Results can be Even Better
 
-If your async methods have completion handlers that take a single Result parameter, as in the above example, you can further reduce your code:
+If your async methods have completion handlers that take a single Result parameter, such as:
+
+```swift
+    func someAsyncMethod(_ completion: (Result<Data, Error>)->Void) {
+    }
+```
+
+You can further streamline your code:
 
 
 ```swift
@@ -170,7 +177,7 @@ function closureChainExample() {
 
     chain.try { data: Data, link in     // `data` type must match prior link.success() (this check is performed at run-time)
         convertToUIImage(data) { result: Result<UIImage,Error> in   // Result type is provided solely for context in this example
-            link.return(result)           // calls link.throw() or link.success() appropriately
+            link.return(result)         // calls link.throw() or link.success() appropriately
         }
     }
 
